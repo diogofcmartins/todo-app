@@ -44,7 +44,6 @@ function TodoPopup({
     <div className='popup'>
       <h3>{todo ? 'Todo details' : 'Add todo'}</h3>
 
-
       <form onSubmit={handleSubmit}>
         <input
           type='text'
@@ -53,6 +52,7 @@ function TodoPopup({
           placeholder='Title'
           value={formData.title}
           onChange={handleChange}
+          required
         />
 
         <textarea
