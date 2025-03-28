@@ -3,6 +3,7 @@ import TodoPopup from './TodoPopup';
 import { IoIosAdd } from 'react-icons/io';
 import TodoItem from './TodoItem';
 import { Todo, useTodos } from '../hooks/useTodos';
+import { DateTime } from 'luxon';
 
 function TodoList() {
   const { todos, saveTodo, toggleDone, removeTodo } = useTodos();
@@ -25,15 +26,26 @@ function TodoList() {
       </button>
 
       <div className='todo-list'>
-        {todos.map((todo) => (
-          <TodoItem
-            todo={todo}
-            key={todo.id}
-            onEdit={() => togglePopup(todo)}
-            onToggle={() => toggleDone(todo.id)}
-            onRemove={() => removeTodo(todo.id)}
-          />
-        ))}
+        {todos
+          .slice()
+          .sort((a, b) => {
+            if (a.done === b.done) {
+              return a.done
+                ? DateTime.fromISO(a.completedAt?.toString() || '').toMillis() -
+                    DateTime.fromISO(b.completedAt?.toString() || '').toMillis()
+                : 0;
+            }
+            return a.done ? 1 : -1;
+          })
+          .map((todo) => (
+            <TodoItem
+              todo={todo}
+              key={todo.id}
+              onEdit={() => togglePopup(todo)}
+              onToggle={() => toggleDone(todo.id)}
+              onRemove={() => removeTodo(todo.id)}
+            />
+          ))}
       </div>
 
       {todos.length === 0 && (
